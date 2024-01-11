@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "c1b1ff13-74cf-45eb-85f3-370a6370a601",
+		"name": "Capstone2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30174912"
+	},
+	"item": [
+		{
+			"name": "GET:\"/verifyEmail\"",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ashleigh.xd@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/users/verifyEmail",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"verifyEmail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST:\"/signUp\"",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admintfs@gmail.com\",\r\n    \"password\": \"admin00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/users/signUp",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"signUp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST:\"/login\"",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admintfs@gmail.com\",\r\n    \"password\": \"admin00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/users/login",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST:\"/products",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Tea Tree Targeted Gel\",\r\n    \"description\": \"Our Tea Tree Targeted Gel is designed to target imperfections for clearer-looking skin. Enriched with Community Trade tea tree oil, this quick-drying gel has a convenient wand applicator for easy application.\",\r\n    \"price\": 349\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/products",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET:\"/retrieveAllProduct\"",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/products/retreiveAllProduct",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"retreiveAllProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET:\"/allActive\"",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/products/allActive",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"allActive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET:\"/productId/retrieve\"",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Tea Tree Anti-Imperfection Daily Solution\",\r\n    \"description\": \"This lightweight daily solution helps combat blemishes and improves the overall condition of skin. Enriched with Community Trade tea tree oil, it helps skin look and feel purified, clearer and mattified, with imperfections* appearing reduced. *Tone, texture and oiliness. \",\r\n    \"price\": 839.50\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/products/659bf5863f5d8e25b019714d/retrieve",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"659bf5863f5d8e25b019714d",
+						"retrieve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT:\"/productId/update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Tea Tree Anti-Imperfection Daily Solution\",\r\n    \"description\": \"This lightweight daily solution helps combat blemishes and improves the overall condition of skin. Enriched with Community Trade tea tree oil, it helps skin look and feel purified, clearer and mattified, with imperfections* appearing reduced. *Tone, texture and oiliness. \",\r\n    \"price\": 839.50\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/products/659bf5863f5d8e25b019714d/update",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"659bf5863f5d8e25b019714d",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT:\"/:productId/archive",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/products/659c127c22e4f4c91d4026f4/archive",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"659c127c22e4f4c91d4026f4",
+						"archive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT:\"/:productId/activate\"",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWJlMDg0YjhmM2E1Y2QyY2FkNmQyMSIsImVtYWlsIjoiYWRtaW50ZnNAZ21haWwuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzA0NzE2NDA3fQ.pSE0z9ciTAjwo6ECrqr5i_PTX1IbOl_9PCJhSTDwYjc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/products/659bf5863f5d8e25b019714d/activate",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products",
+						"659bf5863f5d8e25b019714d",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST:\"/checkout\"",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU4OGUwOWRiMDk5MmQzMjFmYThjYiIsImVtYWlsIjoidGluLnhkQGdtYWlsLmNvbSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MDQ4ODg1ODJ9.a0qfv08pVz8rp1X2FB3lzhFtJNi40Ja__ycK2pZ6jh4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"\"\r\n    \"products\": [\r\n    {\r\n        \"productId\": \"659c10cf22e4f4c91d4026e8\",\r\n        \"quantity\": 2\r\n    },\r\n    {\r\n        \"productId\": \"659bf086022610077809bbca\",\r\n        \"quantity\":1\r\n        }\r\n    ],\r\n    \"totalAmount\": 1300\r\n    \r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/orders/checkout",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"orders",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET:\"/:userDetails\"",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
