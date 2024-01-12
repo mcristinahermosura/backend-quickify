@@ -36,7 +36,6 @@ module.exports.verifyEmailExists = (request, response, next) => {
     );
 };
 
-
 module.exports.registerUser = (request, response) => {
   const reqBody = request.body;
 

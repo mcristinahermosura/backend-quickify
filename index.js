@@ -4,7 +4,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
 const cors = require("cors");
-const port = 4000;
+const port = 4004;
 const app = express();
 
 mongoose.connect(
@@ -20,9 +20,9 @@ connect.once("open", () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use("/users", userRoutes);
-app.use("/products", productRoutes);
-app.use("/orders", orderRoutes);
+app.use("b4/users", userRoutes);
+app.use("b4/products", productRoutes);
+
 
 app.listen(port, () => {
   console.log(`E-commerce API is online on port ${port}`);

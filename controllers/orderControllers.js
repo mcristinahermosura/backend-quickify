@@ -29,17 +29,14 @@ const userAuth = require("../userAuth.js");
 
 module.exports.userCheckout = async (request, response) => {
   try {
-    // Extract order details from the request body
     const { userId, products, totalAmount } = request.body;
 
-    // Create a new order instance
     const newOrder = new Order({
       userId,
       products,
       totalAmount,
     });
 
-    // Save the order to the database
     const savedOrder = await newOrder.save();
 
     response
@@ -51,11 +48,11 @@ module.exports.userCheckout = async (request, response) => {
 };
 
 module.exports.getAllOrders = (request, response) => {
-    Order.find({})
-      .then((result) => response.status(400).json(result))
-      .catch((error) =>
-        response.send({
-          message: `Failed to retrieve all orders. An error occurred during the process. Please try again later.`,
-        })
-      );
-  };
+  Order.find({})
+    .then((result) => response.status(400).json(result))
+    .catch((error) =>
+      response.send({
+        message: `Failed to retrieve all orders. An error occurred during the process. Please try again later.`,
+      })
+    );
+};
