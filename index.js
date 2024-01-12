@@ -20,8 +20,8 @@ connect.once("open", () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use("b4/users", userRoutes);
-app.use("b4/products", productRoutes);
+app.use("/b4/users", userRoutes);
+app.use("/b4/products", productRoutes);
 
 
 app.listen(port, () => {
