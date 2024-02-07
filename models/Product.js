@@ -13,11 +13,23 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Price is required!"],
   },
+  quantity: {
+    type: Number,
+    required: [true, "Quantity is required!"],
+  },
+  stock: {
+    type: Number,
+    required: [true, "Stock is required!"],
+  },
   isActive: {
     type: Boolean,
     default: true,
   },
-  createdOn: {
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+  updatedAt: {
     type: Date,
     default: new Date(),
   },

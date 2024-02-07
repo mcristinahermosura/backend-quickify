@@ -5,26 +5,20 @@ const router = express.Router();
 const { verify, verifyAdmin } = userAuth;
 
 router.post("/", verify, verifyAdmin, productControllers.addProduct);
-router.get("/retrieveAllProduct", productControllers.getAllProducts);
-router.get("/allActive", productControllers.getAllActiveProducts);
-router.get("/retrieve/:productId", productControllers.getSingleProduct);
+router.get("/all", productControllers.getAllProducts);
+router.get("/all-active", productControllers.getAllActiveProducts);
+router.get("/:productId", productControllers.getSingleProduct);
 router.put(
   "/update/:productId",
   verify,
   verifyAdmin,
-  productControllers.updatedProduct
+  productControllers.updateProduct
 );
 router.put(
-  "/archive/:productId",
+  "/update-status/:productId",
   verify,
   verifyAdmin,
-  productControllers.archiveProduct
-);
-router.put(
-  "/activate/:productId/",
-  verify,
-  verifyAdmin,
-  productControllers.activateProduct
+  productControllers.updateProductStatus
 );
 
 module.exports = router;

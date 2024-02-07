@@ -1,105 +1,112 @@
 const User = require("../models/User.js");
-const Product = require("../models/Product.js");
-const Order = require("../models/Order.js");
 const bcrypt = require("bcrypt");
 const userAuth = require("../userAuth.js");
 
-// Helper Function on finding the user by its ID
-const getUser = async (id) => {
-  const user = await User.findById(id);
-  return { id: user._id, email: user.email, isAdmin: user.isAdmin };
+const checkEmailExists = async (email) => {
+  return await User.findOne({ email });
 };
 
-module.exports.verifyEmailExists = (request, response, next) => {
-  const reqBody = request.body;
+module.exports.registerUser = async (request, response) => {
+  try {
+    const { email, password } = request.body;
 
-  if (!reqBody.email || !reqBody.password) {
-    return response.status(400).send({
-      message: "Both email and password are required",
-    });
-  }
+    const existingUser = await checkEmailExists(reqBody.email);
 
-  User.find({ email: reqBody.email })
-    .then((result) => {
-      if (result.length > 0) {
-        return response.status(400).json({
-          message: `Thank you for your interest! It seems that the provided email address is already registered in our system. Please use another email`,
-        });
-      } else {
-        next();
-      }
-    })
-    .catch((error) =>
-      response.send({
-        message: `We apologize for the inconvenience, but an error occurred during the email verification process.!`,
-      })
-    );
-};
-
-module.exports.registerUser = (request, response) => {
-  const reqBody = request.body;
-
-  const newUser = new User({
-    email: reqBody.email,
-    password: bcrypt.hashSync(reqBody.password, 10),
-  });
-
-  newUser
-    .save()
-    .then((save) => {
-      return response.status(200).json({
-        message: `User with email address ${reqBody.email} is now successfully registered!`,
-      });
-    })
-    .catch((error) => {
+    if (!email || !password) {
       return response.status(400).json({
-        message: `We regret to inform you that an error occurred during the registration process.`,
+        message: "Both email and password are required.",
       });
-    });
-};
-module.exports.loginUser = (request, response) => {
-  const reqBody = request.body;
-
-  if (!reqBody.email || !reqBody.password) {
-    return response.status(400).send({
-      message: "Both email and password are required.",
-    });
-  }
-
-  User.findOne({ email: reqBody.email }).then((result) => {
-    if (result === null) {
-      return response.status(400).json({
-        message: `Invalid login attempt. The provided email does not exist. Please register before attempting to log in!`,
-      });
-    } else {
-      const isValidPassword = bcrypt.compareSync(
-        reqBody.password,
-        result.password
-      );
-
-      if (isValidPassword) {
-        const token = userAuth.generateAccessToken(result);
-        return response.send({ accessToken: token });
-      } else {
-        return response.status(400).json({
-          message: `Invalid password. Please provide the correct password and try again.`,
-        });
-      }
     }
-  });
+
+    if (existingUser) {
+      return response.status(400).json({
+        message: "Email already exists. Please use a different email.",
+      });
+    }
+
+    const newUser = new User({
+      email: reqBody.email,
+      password: bcrypt.hashSync(reqBody.password, 10),
+    });
+
+    const isUserCreated = await newUser.save();
+
+    if (!isUserCreated) {
+      return response.status(400).json({
+        message: "Failed to register the user. Please try again later.",
+      });
+    }
+
+    return response.status(201).json({
+      message: "User registered successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: "An error occurred during registration. Please try again later.",
+    });
+  }
 };
 
-module.exports.getUserInfo = (request, response) => {
-  const user = request.user;
+module.exports.loginUser = async (request, response) => {
+  try {
+    const { email, password } = request.body;
+    if (!email || !password) {
+      return response.status(400).json({
+        message: "Both email and password are required.",
+      });
+    }
 
-  User.findById(user.id)
-    .then((result) => {
-      result.password = "";
-      return response.send(result);
-    })
-    .catch((error) =>
-      response.status(400).json({
-        message: `There was an error encounter during the retrieval!`,
-      })
-    );
+    const user = await checkEmailExists(email);
+
+    if (!user) {
+      return response.status(400).json({
+        message:
+          "Invalid login attempt. The provided email does not exist. Please register before attempting to log in!",
+      });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      return response.status(400).json({
+        message:
+          "Invalid password. Please provide the correct password and try again.",
+      });
+    }
+
+    const token = userAuth.generateAccessToken(user);
+
+    return response
+      .status(200)
+      .json({ accessToken: token, isAdmin: user.isAdmin, id: user._id });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: "An error occurred during login. Please try again later.",
+    });
+  }
+};
+
+module.exports.getUserInfo = async (request, response) => {
+  try {
+    const id = request.params.userId;
+
+    let result = await User.findById(id);
+
+    if (!result) {
+      return response.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    result.password = "";
+    return response.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message:
+        "An error occurred during the retrieval. Please try again later.",
+    });
+  }
 };

@@ -5,15 +5,26 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: [true, "User ID is required!"],
   },
-  products: [
+  orders: [
     {
       productId: {
         type: String,
-        required: [true, "product is required!"],
+        required: [true, "Product ID is required!"],
+      },
+      productName: {
+        type: String,
       },
       quantity: {
         type: Number,
-        required: [true, "Number is required!"],
+        required: [true, "Quantity is required!"],
+      },
+      price: {
+        type: Number,
+        required: [true, "Price is required!"],
+      },
+      total: {
+        type: Number,
+        required: [true, "Total is required!"],
       },
     },
   ],
@@ -21,7 +32,25 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Total Amount is required!"],
   },
-  purchasedOn: {
+  shippingAddress: {
+    type: String,
+    required: [true, "Shipping Address is required!"],
+  },
+  paymentMethod: {
+    type: String,
+    default: "Cash On Delivery",
+    required: [true, "Payment Method is required!"],
+  },
+  orderStatus: {
+    type: String,
+    default: "Pending",
+    required: [true, "Order Status is required!"],
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+  updatedAt: {
     type: Date,
     default: new Date(),
   },

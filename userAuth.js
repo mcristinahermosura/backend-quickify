@@ -11,36 +11,56 @@ module.exports.generateAccessToken = (user) => {
 };
 
 module.exports.verify = (request, response, next) => {
-  let token = request.headers.authorization;
+  const token = request.headers.authorization;
 
-  if (token === undefined) {
-    return response.send({
-      message: `Authentication token missing. Please provide a valid token for authentication.`,
-    });
-  } else {
-    token = token.slice(7, token.length);
-
-    jwt.verify(token, authSecret, (err, decodedToken) => {
-      if (err) {
-        return response.send({
-          auth: `Failed`,
-          message: `Action Forbidden`,
-        });
-      } else {
-        request.user = decodedToken;
-        next();
-      }
+  if (!token) {
+    return response.status(401).json({
+      message: "Authentication token missing. Please provide a valid token for authentication.",
     });
   }
+
+  const tokenValue = token.slice(7);
+
+  jwt.verify(tokenValue, authSecret, (err, decodedToken) => {
+    if (err) {
+      return response.status(403).json({
+        auth: "Failed",
+        message: "Action Forbidden",
+      });
+    }
+
+    request.user = decodedToken;
+    next();
+  });
 };
 
 module.exports.verifyAdmin = (request, response, next) => {
-  if (request.user.isAdmin) {
-    next();
-  } else {
-    return response.send({
-      auth: `Operation Failed. Please check the provided information and try again`,
-      message: `Access Forbidden: You do not have the necessary permissions to perform this action`,
+  const token = request.headers.authorization;
+
+  if (!token) {
+    return response.status(401).json({
+      auth: "Operation Failed. Please check the provided information and try again",
+      message: "Access Forbidden: You do not have the necessary permissions to perform this action",
     });
   }
+
+  const tokenValue = token.slice(7);
+
+  jwt.verify(tokenValue, authSecret, (err, decodedToken) => {
+    if (err) {
+      return response.status(403).json({
+        auth: "Failed",
+        message: "Action Forbidden",
+      });
+    }
+
+    if (!decodedToken.isAdmin) {
+      return response.status(403).json({
+        auth: "Failed",
+        message: "Access Forbidden: You do not have the necessary permissions to perform this action",
+      });
+    }
+
+    next();
+  });
 };

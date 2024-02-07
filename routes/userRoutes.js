@@ -5,11 +5,10 @@ const router = express.Router();
 const { verify, verifyAdmin } = userAuth;
 
 router.post(
-  "/signUp",
-  userControllers.verifyEmailExists,
+  "/sig-up",
   userControllers.registerUser
 );
 router.post("/login", userControllers.loginUser);
-router.get("/userDetails", verify, userControllers.getUserInfo);
+router.get("/details", verify, userControllers.getUserInfo);
 
 module.exports = router;

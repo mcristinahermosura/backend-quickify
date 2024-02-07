@@ -1,130 +1,178 @@
-const userAuth = require("../userAuth.js");
+const { RESPONSE_MESSAGE, RESPONSE_STATUS } = require("../constant/index.js");
 const Product = require("../models/Product.js");
-const Order = require("../models/Order.js");
 
-module.exports.addProduct = (request, response) => {
-  let reqBody = request.body;
+module.exports.addProduct = async (request, response) => {
+  try {
+    const { name, description, price, quantity } = request.body;
 
-  if (!reqBody.name || !reqBody.description || !reqBody.price) {
-    return response.status(400).json({
-      message: "Name, description, and price are required.",
-    });
-  }
-
-  const newProduct = new Product({
-    name: reqBody.name,
-    description: reqBody.description,
-    price: reqBody.price,
-  });
-
-  newProduct
-    .save()
-    .then((save) => {
-      return response
-        .status(201)
-        .json({ message: `Product added successfully!` });
-    })
-    .catch((error) => {
+    if (!name || !description || !price || !quantity) {
       return response.status(400).json({
-        message: `Failed to add the product. An error occurred during the process. Please try again later.`,
+        error: "Name, description, price, and quantity are required.",
+        status: RESPONSE_STATUS.FAILED,
       });
+    }
+
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      quantity,
     });
-};
 
-module.exports.getAllProducts = (request, response) => {
-  Product.find({})
-    .then((result) => response.status(200).json(result))
-    .catch((error) =>
-      response.status(400).json({
-        message: `Failed to retrieve all products. An error occurred during the process. Please try again later.`,
-      })
-    );
-};
+    const createdProduct = await newProduct.save();
 
-module.exports.getAllActiveProducts = (request, response) => {
-  Product.find({ isActive: true })
-    .then((result) => response.status(200).json(result))
-    .catch((error) =>
-      response.status(400).json({
-        message: `Failed to retrieve all active products. An error occurred during the process. Please try again later.`,
-      })
-    );
-};
+    if (!createdProduct) {
+      return response.status(400).json({
+        error: RESPONSE_MESSAGE.PRODUCT_CREATE_FAILED,
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
 
-module.exports.getSingleProduct = (request, response) => {
-  const reqParams = request.params.productId;
-
-  Product.findById(reqParams)
-    .then((result) => response.status(200).json(result))
-    .catch((error) =>
-      response.status(400).json({
-        message: `Failed to retrieve the products. An error occurred during the process. Please try again later.`,
-      })
-    );
-};
-
-module.exports.updatedProduct = (request, response) => {
-  const reqParams = request.params.productId;
-  const reqBody = request.body;
-
-  if (!reqBody.name || !reqBody.description || !reqBody.price) {
-    return response.status(400).send({
-      message: "Name, description, and price are required.",
+    return response.status(201).json({
+      message: RESPONSE_MESSAGE.PRODUCT_CREATED_SUCCESS,
+      status: RESPONSE_STATUS.SUCCESS,
+      data: createdProduct,
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: RESPONSE_MESSAGE.ERROR_OCCURRED,
+      status: RESPONSE_STATUS.ERROR,
     });
   }
-
-  const updatedProduct = {
-    name: reqBody.name,
-    description: reqBody.description,
-    price: reqBody.price,
-  };
-  Product.findByIdAndUpdate(reqParams, updatedProduct)
-    .then((result) => {
-      if (result) {
-        return response
-          .status(200)
-          .json({ message: `Product updated successfully!` });
-      } else {
-        return response.status(400).json({
-          message: `Failed to update the product. An error occurred during the process. Please try again later.`,
-        });
-      }
-    })
-    .catch((error) => response.send(error));
 };
 
-module.exports.archiveProduct = (request, response) => {
-  const modifyActiveField = { isActive: false };
-
-  Product.findByIdAndUpdate(request.params.productId, modifyActiveField)
-    .then((result) => {
-      if (result) {
-        return response
-          .status(200)
-          .json({ message: `Product successfully deactivated!` });
-      } else {
-        return response.status(400).json({
-          message: `Failed to deactivate the product. An error occurred during the process. Please try again later!`,
-        });
-      }
-    })
-    .catch((error) => response.send(error));
+module.exports.getAllProducts = async (request, response) => {
+  try {
+    const products = await Product.find({});
+    return response.status(200).json({
+      status: RESPONSE_STATUS.SUCCESS,
+      data: products,
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: "Failed to retrieve all products. Please try again later.",
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
 };
 
-module.exports.activateProduct = (request, response) => {
-  const modifyActiveField = { isActive: true };
+module.exports.getAllActiveProducts = async (request, response) => {
+  try {
+    const products = await Product.find({ isActive: true });
+    return response.status(200).json({
+      status: RESPONSE_STATUS.SUCCESS,
+      data: products,
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: "Failed to retrieve active products. Please try again later.",
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};
 
-  Product.findByIdAndUpdate(request.params.productId, modifyActiveField)
-    .then((result) => {
-      if (result) {
-        return response
-          .status(200)
-          .json({ message: `Product successfully activated!` });
-      } else {
-        return response.status(400).json({
-          message: `Failed to activate the product. An error occurred during the process. Please try again later!`,
-        });
-      }
-    })
-    .catch((error) => response.send(error));
+module.exports.getSingleProduct = async (request, response) => {
+  try {
+    const productId = request.params.productId;
+    const product = await Product.findById(productId);
+    if (!product) {
+      return response.status(404).json({
+        message: `Product with id ${productId} not found.`,
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+    return response.status(200).json({
+      message: `Product with id ${productId} retrieved successfully.`,
+      status: RESPONSE_STATUS.SUCCESS,
+      data: product,
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: RESPONSE_MESSAGE.ERROR_OCCURRED,
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};
+
+module.exports.updateProduct = async (request, response) => {
+  try {
+    const productId = request.params.productId;
+    const { name, description, price, stock } = request.body;
+
+    if (!name || !description || !price || !stock) {
+      return response.status(400).json({
+        message: "Name, description, price, and stock are required.",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+
+    const updatedProduct = {
+      name,
+      description,
+      price,
+      stock,
+    };
+
+    const result = await Product.findByIdAndUpdate(productId, updatedProduct);
+
+    if (result) {
+      return response.status(200).json({
+        message: RESPONSE_MESSAGE.PRODUCT_UPDATED_SUCCESS,
+        status: RESPONSE_STATUS.SUCCESS,
+        data: result,
+      });
+    } else {
+      return response.status(400).json({
+        message: RESPONSE_MESSAGE.PRODUCT_UPDATE_FAILED,
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: RESPONSE_MESSAGE.ERROR_OCCURRED,
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};
+
+module.exports.updateProductStatus = async (request, response) => {
+  try {
+    const productId = request.params.productId;
+    const { isActive } = request.body;
+
+    if (isActive === undefined) {
+      return response.status(400).json({
+        message: "isActive field is required.",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+
+    const result = await Product.findByIdAndUpdate(productId, {
+      isActive: isActive,
+    });
+
+    if (result) {
+      return response.status(200).json({
+        message: "Product status updated successfully!",
+        data: result,
+        status: RESPONSE_STATUS.SUCCESS,
+      });
+    } else {
+      return response.status(400).json({
+        message: "Failed to update the product status. Please try again later.",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: RESPONSE_MESSAGE.ERROR_OCCURRED,
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
 };
