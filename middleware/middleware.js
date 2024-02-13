@@ -1,28 +1,6 @@
-const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const { MIME_TYPES } = require("../constant");
-
-module.exports.logger = (req, res, next) => {
-  const currentDate = new Date().toLocaleString("en-US");
-  try {
-    const requestLog = `DATE: ${currentDate} - IP(${req.ip}) - HOST: ${
-      req.headers.host
-    } - METHOD: ${req.method} ${req.originalUrl} - ORIGIN: ${
-      req.headers.origin
-    } -  AUTHORIZATION: ${req.headers.authorization} -   ${
-      Object.keys(req.body).length > 0
-        ? `BODY: ${JSON.stringify(req.body)}`
-        : ""
-    } `;
-
-    console.log(requestLog);
-  } catch (e) {
-    const errLog = ` ERROR: ${e.message} - DATE: ${currentDate} - IP:${req.ip} - ${e.message}  \n -------------------------------- \n`;
-    console.error(errLog);
-  }
-  next();
-};
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
