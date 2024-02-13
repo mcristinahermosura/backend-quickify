@@ -6,6 +6,7 @@ const productRoutes = require("./routes/productRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
 const cors = require("cors");
 const path = require("path");
+const { logger } = require("./middleware/middleware.js");
 const PORT = config.port;
 const MONGO_URI = config.mongoUri;
 
@@ -19,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-
+app.use(logger);
 app.use("/b4/users", userRoutes);
 app.use("/b4/products", productRoutes);
 app.use("/b4/orders", orderRoutes);
