@@ -11,6 +11,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: [true, "Product ID is required!"],
       },
+      image: {
+        type: String,
+        default: "",
+      },
       productName: {
         type: String,
       },

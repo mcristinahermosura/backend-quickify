@@ -13,13 +13,16 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Price is required!"],
   },
-  quantity: {
-    type: Number,
-    required: [true, "Quantity is required!"],
-  },
   stock: {
     type: Number,
+    default: 0,
     required: [true, "Stock is required!"],
+  },
+  image: {
+    type: Object,
+    default: {
+      url: "",
+    },
   },
   isActive: {
     type: Boolean,

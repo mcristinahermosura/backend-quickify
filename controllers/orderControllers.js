@@ -66,6 +66,10 @@ module.exports.userCheckout = async (request, response) => {
       }
 
       const { _id, name } = product;
+
+      product.stock -= quantity;
+      await product.save();
+
       validatedOrders.push({
         productId: _id,
         productName: name,
@@ -109,10 +113,24 @@ module.exports.getAllOrders = async (request, response) => {
   try {
     const orders = await Order.find({});
 
+    if (orders.length === 0) {
+      return response
+        .status(404)
+        .json({ message: "No orders found.", status: RESPONSE_STATUS.FAILED });
+    }
+
+    const ordersWithEmail = await Promise.all(
+      orders.map(async (order) => {
+        const user = await User.findById({ _id: order.userId });
+        const { email } = user;
+        return { ...order._doc, email };
+      })
+    );
+
     response.status(200).json({
-      data: orders,
+      data: ordersWithEmail,
       message:
-        orders.length === 0
+        ordersWithEmail.length === 0
           ? "No orders found."
           : "All orders retrieved successfully.",
       status: RESPONSE_STATUS.SUCCESS,
@@ -132,7 +150,9 @@ module.exports.getUserOrder = async (request, response) => {
     const userOrders = await Order.find({ userId });
 
     if (userOrders.length === 0) {
-      return response.status(404).json({ message: "User orders not found." });
+      return response
+        .status(404)
+        .json({ message: "User orders not found.", status: "failed" });
     }
 
     response.status(200).json({
@@ -158,6 +178,7 @@ module.exports.cancelOrder = async (request, response) => {
     }
 
     order.orderStatus = "Cancelled";
+    order.updatedAt = new Date();
     await order.save();
 
     response.status(200).json({
@@ -203,6 +224,7 @@ module.exports.updateOrderStatus = async (request, response) => {
     }
 
     order.orderStatus = orderStatus;
+    order.updatedAt = new Date();
 
     await order.save();
 

@@ -15,7 +15,8 @@ module.exports.verify = (request, response, next) => {
 
   if (!token) {
     return response.status(401).json({
-      message: "Authentication token missing. Please provide a valid token for authentication.",
+      message:
+        "Authentication token missing. Please provide a valid token for authentication.",
     });
   }
 
@@ -40,7 +41,8 @@ module.exports.verifyAdmin = (request, response, next) => {
   if (!token) {
     return response.status(401).json({
       auth: "Operation Failed. Please check the provided information and try again",
-      message: "Access Forbidden: You do not have the necessary permissions to perform this action",
+      message:
+        "Access Forbidden: You do not have the necessary permissions to perform this action",
     });
   }
 
@@ -57,10 +59,15 @@ module.exports.verifyAdmin = (request, response, next) => {
     if (!decodedToken.isAdmin) {
       return response.status(403).json({
         auth: "Failed",
-        message: "Access Forbidden: You do not have the necessary permissions to perform this action",
+        message:
+          "Access Forbidden: You do not have the necessary permissions to perform this action",
       });
     }
 
     next();
   });
+};
+
+module.exports.decodeToken = async (token) => {
+  return jwt.decode(token);
 };

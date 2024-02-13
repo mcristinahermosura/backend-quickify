@@ -18,4 +18,13 @@ const RESPONSE_MESSAGE = {
     "An error occurred during the process. Please try again later.",
 };
 
-module.exports = { RESPONSE_STATUS, RESPONSE_MESSAGE };
+const MIME_TYPES = {
+  "image/jpg": "jpg",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/gif": "gif",
+  "image/bmp": "bmp",
+  "image/webp": "webp",
+};
+
+module.exports = { RESPONSE_STATUS, RESPONSE_MESSAGE, MIME_TYPES };

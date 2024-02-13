@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post("/checkout", verify, orderControllers.userCheckout);
 
-router.get("/:userId", verify, orderControllers.getUserOrder);
-
 router.get("/all", verify, verifyAdmin, orderControllers.getAllOrders);
+
+router.get("/:userId", verify, orderControllers.getUserOrder);
 
 router.put("/cancel-order", verify, orderControllers.cancelOrder);
 
