@@ -2,8 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const { MIME_TYPES } = require("../constant");
-const logFilePath = path.join(__dirname, "../logs", "access.log");
-const logErrorFilePath = path.join(__dirname, "../logs", "error.log");
 
 module.exports.logger = (req, res, next) => {
   const currentDate = new Date().toLocaleString("en-US");
@@ -19,20 +17,9 @@ module.exports.logger = (req, res, next) => {
     } `;
 
     console.log(requestLog);
-
-    fs.appendFile(logFilePath, `${requestLog}\n`, (err) => {
-      if (err) {
-        console.error("Error writing to log file:", err);
-      }
-    });
   } catch (e) {
     const errLog = ` ERROR: ${e.message} - DATE: ${currentDate} - IP:${req.ip} - ${e.message}  \n -------------------------------- \n`;
     console.error(errLog);
-    fs.appendFile(logErrorFilePath, errLog, (err) => {
-      if (err) {
-        console.error("Error writing to error log file:", err);
-      }
-    });
   }
   next();
 };

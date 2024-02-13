@@ -21,9 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(logger);
-app.use("/users", userRoutes);
-app.use("/products", productRoutes);
-app.use("/orders", orderRoutes);
+app.use("/b4/users", userRoutes);
+app.use("/b4/products", productRoutes);
+app.use("/b4/orders", orderRoutes);
 
 app.use("/files", express.static(path.join(__dirname, "uploads")));
 
