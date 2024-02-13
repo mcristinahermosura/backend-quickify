@@ -12,9 +12,13 @@ router.post(
   processFile,
   productControllers.addProduct
 );
+
 router.get("/all", productControllers.getAllProducts);
+
 router.get("/all-active", productControllers.getAllActiveProducts);
+
 router.get("/:productId", productControllers.getSingleProduct);
+
 router.put(
   "/update/:productId",
   verify,
@@ -22,6 +26,7 @@ router.put(
   processFile,
   productControllers.updateProduct
 );
+
 router.put(
   "/update-status/:productId",
   verify,
