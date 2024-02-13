@@ -2,6 +2,7 @@ const path = require("path");
 const multer = require("multer");
 const { MIME_TYPES } = require("../constant");
 
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, path.join(__dirname, "../uploads"));
