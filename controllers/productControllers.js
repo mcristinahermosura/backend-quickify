@@ -135,7 +135,7 @@ module.exports.getSingleProduct = async (request, response) => {
 module.exports.updateProduct = async (request, response) => {
   try {
     const url = request.protocol + "://" + request.headers.host;
-    const imageURL = url + "/files/" + request.file.filename;
+    const imageURL = url + "/b4/files/" + request.file.filename;
     const productId = request.params.productId;
     const { name, description, price, stock } = request.body;
 
