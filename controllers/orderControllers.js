@@ -68,7 +68,14 @@ module.exports.userCheckout = async (request, response) => {
       const { _id, name } = product;
 
       product.stock -= quantity;
-      await product.save();
+      const updateStockRes = await product.save();
+
+      if (!updateStockRes) {
+        return response.status(400).json({
+          message: "Failed to update product stock.",
+          status: RESPONSE_STATUS.FAILED,
+        });
+      }
 
       validatedOrders.push({
         productId: _id,
@@ -177,11 +184,31 @@ module.exports.cancelOrder = async (request, response) => {
       return response.status(404).json({ message: "Order not found." });
     }
 
+    if (order.orderStatus === "Cancelled") {
+      return response.status(400).json({
+        error: "Order is already cancelled.",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+
+    for (const order of order.orders) {
+      const product = await Product.findById(order.productId);
+      product.stock += order.quantity;
+      const updateStockRes = await product.save();
+
+      if (!updateStockRes) {
+        return response.status(400).json({
+          message: "Failed to update product stock.",
+          status: RESPONSE_STATUS.FAILED,
+        });
+      }
+    }
+
     order.orderStatus = "Cancelled";
     order.updatedAt = new Date();
     await order.save();
 
-    response.status(200).json({
+    return response.status(200).json({
       data: order,
       message: "Order cancelled successfully.",
       status: RESPONSE_STATUS.SUCCESS,

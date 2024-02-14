@@ -140,8 +140,7 @@ module.exports.updateUser = async (request, response) => {
         status: RESPONSE_STATUS.FAILED,
       });
     }
-
-    // We don't want users to update their own isAdmin status
+    
     const token = request.headers["authorization"].split(" ")[1];
     const decodedToken = await userAuth.decodeToken(token);
     const isAuthorized = decodedToken.id === id;
