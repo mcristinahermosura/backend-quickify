@@ -27,11 +27,18 @@ router.put(
   productControllers.updateProduct
 );
 
-router.put(
+router.patch(
   "/update-status/:productId",
   verify,
   verifyAdmin,
   productControllers.updateProductStatus
+);
+
+router.delete(
+  "/delete/:productId",
+  verify,
+  verifyAdmin,
+  productControllers.deleteProduct
 );
 
 module.exports = router;

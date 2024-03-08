@@ -268,12 +268,10 @@ module.exports.updateProductStatus = async (request, response) => {
   }
 };
 
-// delete product by id
 module.exports.deleteProduct = async (request, response) => {
   try {
-    const productId = request.params.productId;
+    const { productId } = request.params;
     const product = await Product.findByIdAndDelete(productId);
-
 
     const filename = product.image.url.substring(
       product.image.url.lastIndexOf("/") + 1

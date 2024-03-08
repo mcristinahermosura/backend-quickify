@@ -10,13 +10,20 @@ router.get("/all", verify, verifyAdmin, orderControllers.getAllOrders);
 
 router.get("/:userId", verify, orderControllers.getUserOrder);
 
-router.put("/cancel-order", verify, orderControllers.cancelOrder);
+router.patch("/cancel-order", verify, orderControllers.cancelOrder);
 
-router.put(
+router.patch(
   "/update-status",
   verify,
   verifyAdmin,
   orderControllers.updateOrderStatus
+);
+
+router.delete(
+  "/delete/:orderId",
+  verify,
+  verifyAdmin,
+  orderControllers.deleteOrder
 );
 
 module.exports = router;
