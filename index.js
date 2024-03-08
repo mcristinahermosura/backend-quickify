@@ -21,10 +21,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(logger);
-app.use("/b4/users", userRoutes);
-app.use("/b4/products", productRoutes);
-app.use("/b4/orders", orderRoutes);
-app.use("/b4/files", express.static(path.join(__dirname, "uploads")));
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/files", express.static(path.join(__dirname, "uploads")));
 
 app.listen(PORT, () => {
   console.log(`E-commerce API is listening on port ${PORT}`);
