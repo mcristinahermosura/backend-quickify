@@ -140,7 +140,7 @@ module.exports.updateUser = async (request, response) => {
         status: RESPONSE_STATUS.FAILED,
       });
     }
-    
+
     const token = request.headers["authorization"].split(" ")[1];
     const decodedToken = await userAuth.decodeToken(token);
     const isAuthorized = decodedToken.id === id;
@@ -205,6 +205,30 @@ module.exports.getAllUsers = async (request, response) => {
     return response.status(500).json({
       message:
         "An error occurred during the retrieval. Please try again later.",
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};
+
+module.exports.deleteUser = async (request, response) => {
+  try {
+    const { id } = request.params;
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+
+    return response.status(200).json({
+      message: "User deleted successfully",
+      status: RESPONSE_STATUS.SUCCESS,
+    });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: "An error occurred during the deletion. Please try again later.",
       status: RESPONSE_STATUS.ERROR,
     });
   }

@@ -267,3 +267,25 @@ module.exports.updateOrderStatus = async (request, response) => {
     });
   }
 };
+
+module.exports.deleteOrder = async (request, response) => {
+  try {
+    const { orderId } = request.params;
+    const order = await Order.findByIdAndDelete(orderId);
+    if (!order) {
+      return response.status(404).json({
+        message: "Order not found",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+    response.status(200).json({
+      message: "Order deleted successfully",
+      status: RESPONSE_STATUS.SUCCESS,
+    });
+  } catch (error) {
+    response.status(500).json({
+      message: "An error occurred during the deletion. Please try again later.",
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};

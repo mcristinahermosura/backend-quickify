@@ -28,7 +28,7 @@ function removeImage(filename, callback) {
 module.exports.addProduct = async (request, response) => {
   try {
     const url = request.protocol + "://" + request.headers.host;
-    const imageURL = url + "/files/" + request.file.filename;
+    const imageURL = url + "/b4/files/" + request.file.filename;
 
     const { name, description, price, stock } = request.body;
 
@@ -252,6 +252,47 @@ module.exports.updateProductStatus = async (request, response) => {
         status: RESPONSE_STATUS.FAILED,
       });
     }
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: RESPONSE_MESSAGE.ERROR_OCCURRED,
+      status: RESPONSE_STATUS.ERROR,
+    });
+  }
+};
+
+// delete product by id
+module.exports.deleteProduct = async (request, response) => {
+  try {
+    const productId = request.params.productId;
+    const product = await Product.findByIdAndDelete(productId);
+
+    // delete the image from the server
+    const filename = product.image.url.substring(
+      product.image.url.lastIndexOf("/") + 1
+    );
+    if (product.image.url.length > 1) {
+      removeImage(filename, (success) => {
+        if (!success) {
+          return response.status(400).json({
+            message: "An error occured upon deleting the image!",
+            status: RESPONSE_STATUS.FAILED,
+          });
+        }
+      });
+    }
+
+    if (!product) {
+      return response.status(404).json({
+        message: "Product not found",
+        status: RESPONSE_STATUS.FAILED,
+      });
+    }
+
+    return response.status(200).json({
+      message: "Product deleted successfully",
+      status: RESPONSE_STATUS.SUCCESS,
+    });
   } catch (error) {
     console.error(error);
     return response.status(500).json({
