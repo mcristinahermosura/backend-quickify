@@ -32,19 +32,25 @@ module.exports.addProduct = async (request, response) => {
 
     const { name, description, price, stock } = request.body;
 
-    if (
-      !name ||
-      !description ||
-      isNaN(price) ||
-      price < 0 ||
-      isNaN(stock) ||
-      stock < 0
-    ) {
-      return response.status(400).json({
-        error: "Name, description, price, and stock are required.",
-        status: RESPONSE_STATUS.FAILED,
-      });
+    const validationErrors = [];
+
+    if (!name) {
+      validationErrors.push("Name is required.");
     }
+    if (!description) {
+      validationErrors.push("Description is required.");
+    }
+    if (!price || isNaN(price) || price < 0) {
+      validationErrors.push(
+        "Price must be a non-negative number and not null."
+      );
+    }
+    if (!stock || isNaN(stock) || stock < 0) {
+      validationErrors.push(
+        "Stock must be a non-negative number and not null."
+      );
+    }
+
     const newProduct = new Product({
       name,
       description,
@@ -60,6 +66,7 @@ module.exports.addProduct = async (request, response) => {
       return response.status(400).json({
         error: RESPONSE_MESSAGE.PRODUCT_CREATE_FAILED,
         status: RESPONSE_STATUS.FAILED,
+        data: validationErrors,
       });
     }
 
@@ -162,7 +169,7 @@ module.exports.updateProduct = async (request, response) => {
       return response.status(400).json({
         message: "Validation failed.",
         status: RESPONSE_STATUS.FAILED,
-        error: validationErrors,
+        data: validationErrors,
       });
     }
 
@@ -267,7 +274,7 @@ module.exports.deleteProduct = async (request, response) => {
     const productId = request.params.productId;
     const product = await Product.findByIdAndDelete(productId);
 
-    // delete the image from the server
+
     const filename = product.image.url.substring(
       product.image.url.lastIndexOf("/") + 1
     );
